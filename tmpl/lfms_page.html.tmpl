@@ -1,0 +1,11 @@
+{{ define "lfmsPage" }}
+{{ template "pageHeader" . }}
+
+<div class="content">
+	<div class="tables-container tables-container-listing">
+		{{ template "lfmsList" . }}
+	</div>
+</div>
+{{ template "pageFooterTop" . }}
+{{ template "pageFooterBottom" . }}
+{{ end }}

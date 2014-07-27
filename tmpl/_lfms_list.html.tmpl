@@ -1,0 +1,30 @@
+{{ define "lfmsList" }}
+{{ $lfms := (index .Sdata 0).Lfms }}
+{{ $d := . }}
+<h2 class="content-subhead">Groups Looking for a 5v5 Match</h2>
+<a href="/lfms/form/0" class="button-table pure-button">Find a 5v5 Match</a>
+<table class="listing-table pure-table pure-table-horizontal">
+    <thead>
+        <tr>
+            <th hidden>Id</th>
+            <th>Party Leader</th>
+            <th>Rainbow</th>
+            <th>Added</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {{ range $lfms }}
+        <tr>
+            <td hidden>{{ .Id }}</td>
+            <td class="long-column">{{ .CharacterName }}@{{ .UserName }}</td>
+            <td>{{ .Rainbow }}</td>
+            <td>{{ ($d.Net.TimeSince .AddedAt) }}m ago</td>
+        </tr>
+        {{ end }}
+        <tr>
+            <td class="spacer-column" colspan=5></td>
+        </tr>
+    </tbody>
+</table>
+{{ end }}

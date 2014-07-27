@@ -1,0 +1,12 @@
+{{ define "lfgsPage" }}
+{{ template "pageHeader" . }}
+
+<div class="content">
+	<div class="tables-container tables-container-listing">
+		{{ template "lfgsList" . }}
+	</div>
+</div>
+{{ template "pageFooterTop" . }}
+{{ template "pageFooterBottom" . }}
+{{ end }}
+

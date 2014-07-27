@@ -1,0 +1,89 @@
+{{ define "pageHeader" }}<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<link rel="shortcut icon" href="/public/images/favicon.ico">
+
+	<title>{{ .PageTitle }}</title>
+
+	<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
+	<link rel="stylesheet" href="/assets/css/style.css">
+
+	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+	<script src="../../assets/js/html5shiv.js"></script>
+	<script src="../../assets/js/respond.min.js"></script>
+	<![endif]-->
+
+	<!--[if lte IE 8]>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/grids-responsive-old-ie-min.css">
+	<![endif]-->
+	<!--[if gt IE 8]><!-->
+	    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/grids-responsive-min.css">
+	<!--<![endif]-->
+</head>
+
+<body>
+<div class="bodyContainer" id="layout">
+
+	<a href="#menu" id="menuLink" class="menu-link">
+        <!-- Hamburger icon -->
+        <span></span>
+    </a>
+
+	<div id="menu">
+		<nav class="pure-menu pure-menu-open">
+			<ul>
+				<!--<li><a href="/">Sign In/Up</a></li>-->
+				<li><a href="/help">Help</a></li>
+				<p></p>
+			</ul>
+			<a class="pure-menu-heading" href="/">nwBiS Home</a>
+			<ul>
+				<li><a href="/lfgs/form/0">Find a Gr0up</a></li>
+				<li><a href="/lfms/form/0">Find a 5v5</a></li>
+				<!--<li><a href="/">Inf0</a></li>
+				<li><a href="/">Ab0ut</a></li>-->
+			</ul>
+		</nav>
+	</div>
+
+
+	<main id="main" class="mainContent">
+		<header class="header">
+			<a href="/">
+            	<img class="pure-img-responsive" src="/public/images/nwbis_logo_alpha.jpg" />
+        	</a>
+            <h3>Y0ur Friendly Neighb0rho0d PvP St0re</h3>
+        </header>		
+		
+		{{ end }}
+
+		{{ define "pageFooterTop" }}
+
+	</main>
+	<footer class="footer">
+	<div class="footerContent">
+		<a href="#" class="copyr">&copy;Cogciprocate Productions</a>
+	</div>
+</footer>
+
+</div>
+
+
+{{ end }}
+
+{{ define "pageFooterBottom" }}
+<script src="/assets/js/nwbis.js"></script>
+
+</body>
+</html>
+<!-- Maybe use this later when I inline some CSS
+<noscript><link rel="stylesheet" href="/assets/css/style.css"></noscript>
+<noscript><link rel="stylesheet" href="/assets/vendor/pure-min.css"></noscript>
+-->
+{{ end }}

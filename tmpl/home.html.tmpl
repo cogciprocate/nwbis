@@ -1,0 +1,22 @@
+{{ define "home" }}
+{{ template "pageHeader" . }}
+
+<div class="content">
+	<div class="pure-g">
+		<div class="pure-u-1 pure-u-xl-16-24">
+			<div class="tables-container tables-container-listing">
+				{{ template "lfgsList" . }}
+				{{ template "lfmsList" . }}
+			</div>
+		</div>
+		<div class="pure-u-1 pure-u-xl-8-24">
+			<div class="tables-container tables-container-side">
+				{{ template "sideTable1" . }}
+			</div>
+		<div>
+	</div>
+</div>
+{{ template "pageFooterTop" . }}
+{{ template "pageFooterBottom" . }}
+{{ end }}
+
