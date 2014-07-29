@@ -20,6 +20,7 @@ type lfg struct {
 	ClassName	string
 	QueuePrefName string
 	TimeSince string
+	Ousts int
 }
 
 type lfgsAdapter struct {
@@ -60,4 +61,18 @@ func (da *lfgsAdapter) newLfg() (inf interface{}) {
 	inf = lfg
 	
 	return
+}
+
+func (da *lfgsAdapter) oust(id int) {
+	da.Exec(db.Stmts["oustLfg"], id)
+}
+
+func (da *lfgsAdapter) IsOusted(lfgId int, oustList string, ousts int) string {
+	if (ousts > 2) {
+		return `class="strikethrough"`
+	}
+	if (net.IntInStr(oustList,lfgId,",")) {
+		return `class="strikethrough"`
+	}
+	return ``
 }

@@ -30,7 +30,6 @@ func lfmsStmts() {
 			l.rainbow,
 			l.added_at,
 			(NOW() - l.added_at) as time_since
-
 		FROM lfms l
 		WHERE (NOW() - l.added_at) < (interval '480 minutes')
 		ORDER BY l.id DESC

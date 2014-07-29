@@ -246,6 +246,10 @@ small screens.
     text-align: center;
 }
 
+.strikethrough td {
+    text-decoration: line-through;
+}
+
 .listing-table {
     font-size: .9em;
     /*table-layout:fixed;*/
@@ -293,6 +297,18 @@ small screens.
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
     margin-bottom: 10px;
     width: 12em; 
+    vertical-align: middle;
+}
+
+.button-small {
+    border-radius: 4px;
+    color: #101010;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left:5px;
+    padding-right:5px;
     vertical-align: middle;
 }
 

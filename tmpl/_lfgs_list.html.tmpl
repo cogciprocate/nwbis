@@ -1,9 +1,11 @@
 {{ define "lfgsList" }}
+{{ $lfga := .Data }}
 {{ $rps := (index .Sdata 1).RankingPages }}
 {{ $rpsa := (index .Sdata 1) }}
 {{ $gid := (index .Sdata 2) }}
+{{ $oustlist := (index .Sdata 4) }}
 {{ $d := . }}
-<h2 class="content-subhead">Players Looking for Group</h2>
+<h2 class="content-subhead"><b>Players Looking for Group</b></h2>
 {{ if $gid }}<a href="/lfgs/form/0" class="button-table pure-button">Edit My Listing</a><a href="/lfgs/delete/0" class="button-normal pure-button">Remove My Listing</a>
 {{ else }}
 <a href="/lfgs/form/0" class="button-table pure-button">Find a Group</a>
@@ -18,22 +20,25 @@
             <th>Page</th>
             <th>Group Type</th>
             <th>Added</th>
+            <th>Remove</th>
         </tr>
     </thead>
 
     <tbody>
-        {{ range .Data.Lfgs }}
-        <tr>
+        {{ range $lfga.Lfgs }}
+        {{$ousted := ($lfga.IsOusted .Id $oustlist .Ousts)}}
+        <tr {{if $ousted }}class="strikethrough"{{end}}>
             <td hidden>{{ .Id }}</td>
             <td class="long-column">{{ .CharacterName }}@{{ .UserName }}</td>
             <td>{{ .ClassAbbr }}</td>
             <td>{{ ($rpsa.AsText .RankingPage) }}</td>
             <td>{{ .QueuePrefName }}</td>
             <td>{{ ($d.Net.TimeSince .AddedAt) }}m ago</td>
+            <td>{{if not $ousted}}<a href="/lfgs/oust/{{ .Id }}" class="pure-button button-small"> X </a>{{end}}</td>
         </tr>
         {{ end }}
         <tr>
-            <td class="spacer-column" colspan=5></td>
+            <td class="spacer-column" colspan=100%></td>
         </tr>
     </tbody>
 </table>

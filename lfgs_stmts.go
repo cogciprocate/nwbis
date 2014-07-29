@@ -36,7 +36,8 @@ func lfgsStmts() {
 			c.abbr,
 			c.name,
 			q.name,
-			(NOW() - l.added_at) as time_since
+			(NOW() - l.added_at) as time_since,
+			l.ousts
 
 		FROM lfgs l, classes c, queue_prefs q
 		WHERE c.id = l.class_id 
@@ -64,7 +65,8 @@ func lfgsStmts() {
 			c.abbr,
 			c.name,
 			q.name,
-			(NOW() - l.added_at) as time_since
+			(NOW() - l.added_at) as time_since,
+			l.ousts
 		FROM lfgs l, classes c, queue_prefs q
 		WHERE c.id = l.class_id 
 			AND q.id = l.queue_pref_id
@@ -88,7 +90,16 @@ func lfgsStmts() {
 	
 	db.AddStatement("deleteLfg",
 		d,
-		`DELETE FROM lfgs
+		`UPDATE lfgs SET 
+			ousts = ousts + 100
 		WHERE id = $1;`,
 	)
+	
+	db.AddStatement("oustLfg",
+		d,
+		`UPDATE lfgs SET 
+			ousts = ousts + 1
+		WHERE id = $1;`,
+	)
+	/**/
 }

@@ -2,7 +2,8 @@ package main
 
 import (
 	"net/http"
-	"github.com/nsan1129/unframed/log"
+	//"github.com/nsan1129/unframed"
+	//"github.com/nsan1129/unframed/log"
 )
 
 func lfgsReg() {
@@ -28,6 +29,7 @@ func lfgsRoutes() {
 	sr.Get("/form/{Id}", lfgsForm)
 	sr.Post("/save", lfgsSave)
 	sr.Get("/delete/{Id}", lfgsDelete)
+	sr.Get("/oust/{Id}", lfgsOust)
 }
 
 /*
@@ -57,7 +59,7 @@ func lfgsForm(w http.ResponseWriter, r *http.Request) {
 	net.SetSession(r)
 	if val,ok := net.Session.Values["lfg_id"]; ok {
 	    id = val.(int)
-		log.Message("Loading LFg, Id:", id)
+		//log.Message("Loading LFg, Id:", id)
 	}
 
 	if id == 0 {
@@ -92,8 +94,8 @@ func lfgsDelete(w http.ResponseWriter, r *http.Request) {
 	net.SetSession(r)
 	if val,ok := net.Session.Values["lfg_id"]; ok {
 	    id := val.(int)
-	    ss := new(lfgsAdapter)
-		ss.delete(id)
+	    da := new(lfgsAdapter)
+		da.delete(id)
 		net.Session.AddFlash("LFG Listing Deleted: ")
 		net.Session.AddFlash(net.Session.Values["lfg_id"].(int))
 	} else {
@@ -103,6 +105,23 @@ func lfgsDelete(w http.ResponseWriter, r *http.Request) {
 	
 	net.Session.Values["lfg_id"] = 0
 	net.Session.Save(r,w)
+
+	http.Redirect(w, r, "/", http.StatusFound)
+}
+
+func lfgsOust(w http.ResponseWriter, r *http.Request) {
+	net.SetSession(r)
+	id := net.QueryUrl("Id", r)
+
+	if val,ok := net.Session.Values["ousts"]; ok {
+		net.Session.Values["ousts"] = net.StrAppendInt(val.(string), id, ",")
+	} else {
+		net.Session.Values["ousts"] = net.StrAppendInt("", id, "")
+	}
+
+	net.Session.Save(r,w)
+	da := new(lfgsAdapter)
+	da.oust(id)
 
 	http.Redirect(w, r, "/", http.StatusFound)
 }

@@ -2,7 +2,7 @@
 {{ $lfms := (index .Sdata 0).Lfms }}
 {{ $mid := (index .Sdata 3) }}
 {{ $d := . }}
-<h2 class="content-subhead">Groups Looking for a 5v5 Match</h2>
+<h2 class="content-subhead"><b>Groups Looking for a 5v5 Match</b></h2>
 {{ if $mid }}
 <a href="/lfms/form/0" class="button-table pure-button">Edit My Listing</a><a href="/lfms/delete/0" class="button-normal pure-button">Remove My Listing</a>
 {{ else }}
@@ -28,7 +28,7 @@
         </tr>
         {{ end }}
         <tr>
-            <td class="spacer-column" colspan=5></td>
+            <td class="spacer-column" colspan=100%></td>
         </tr>
     </tbody>
 </table>

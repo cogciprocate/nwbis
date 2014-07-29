@@ -33,10 +33,11 @@ func home(w http.ResponseWriter, r *http.Request) {
 	ra := new(rankingPagesAdapter).list()
 
 	net.SetSession(r)
+
 	if flashes := net.Session.Flashes(); len(flashes) > 0 {
         // Just print the flash values.
         log.Message(flashes)
-    } 
+    }
 
     lfm_id := 0
 	if val,ok := net.Session.Values["lfm_id"]; ok {
@@ -48,9 +49,15 @@ func home(w http.ResponseWriter, r *http.Request) {
 		lfg_id = val.(int)
 	}
 
+	ou := ""
+	if val,ok := net.Session.Values["ousts"]; ok {
+		ou = val.(string)
+		//log.Message("ousts session value found and sent to tmpl")
+	}	
+
     net.Session.Save(r,w)
 	//log.Message(len(dataModel.Lfgs))
-	net.ExeTmpl(w, "home", lfgsA, lfmsA, ra, lfg_id, lfm_id)
+	net.ExeTmpl(w, "home", lfgsA, lfmsA, ra, lfg_id, lfm_id, ou)
 }
 
 func help(w http.ResponseWriter, r *http.Request) {
