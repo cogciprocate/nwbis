@@ -1,7 +1,7 @@
 package main
 
 import (
-	_ "github.com/bmizerany/pq"
+	_ "github.com/lib/pq"
 	"github.com/nsan1129/unframed"
 	"github.com/nsan1129/unframed/log"
 )

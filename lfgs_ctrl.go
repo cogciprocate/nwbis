@@ -2,7 +2,7 @@ package main
 
 import (
 	"net/http"
-	//"github.com/nsan1129/unframed/log"
+	"github.com/nsan1129/unframed/log"
 )
 
 func lfgsReg() {
@@ -27,7 +27,7 @@ func lfgsRoutes() {
 	sr.Get("/list", home)
 	sr.Get("/form/{Id}", lfgsForm)
 	sr.Post("/save", lfgsSave)
-	sr.Post("/delete", lfgsDelete)
+	sr.Get("/delete/{Id}", lfgsDelete)
 }
 
 /*
@@ -48,12 +48,17 @@ func lfgsList(w http.ResponseWriter, r *http.Request) {
 
 func lfgsForm(w http.ResponseWriter, r *http.Request) {
 
-	id := net.QueryUrl("Id", r)
-
 	da := new(lfgsAdapter)
 	ca := new(classesAdapter).list()
 	qa := new(queuePrefsAdapter).list()
 	ra := new(rankingPagesAdapter).list()
+
+	id := 0
+	net.SetSession(r)
+	if val,ok := net.Session.Values["lfg_id"]; ok {
+	    id = val.(int)
+		log.Message("Loading LFg, Id:", id)
+	}
 
 	if id == 0 {
 		_ = da.newLfg()
@@ -65,11 +70,17 @@ func lfgsForm(w http.ResponseWriter, r *http.Request) {
 
 func lfgsSave(w http.ResponseWriter, r *http.Request) {
 
-	da := new(lfg)
+	dm := new(lfg)
 
-	net.DecodeForm(da, r)
+	net.DecodeForm(dm, r)
 
-	new(lfgsAdapter).save(da)
+	lastId := new(lfgsAdapter).save(dm)
+
+	net.SetSession(r)
+	net.Session.Values["lfg_id"] = lastId
+	net.Session.AddFlash("new LFG Saved: ")
+	net.Session.AddFlash(net.Session.Values["lfg_id"].(int))
+	net.Session.Save(r,w)
 
 	http.Redirect(w, r, "/lfgs/list", http.StatusFound)
 
@@ -77,12 +88,23 @@ func lfgsSave(w http.ResponseWriter, r *http.Request) {
 
 func lfgsDelete(w http.ResponseWriter, r *http.Request) {
 
-	var da struct{ Id int }
+	/* id := net.QueryUrl("Id", r) */
+	net.SetSession(r)
+	if val,ok := net.Session.Values["lfg_id"]; ok {
+	    id := val.(int)
+	    ss := new(lfgsAdapter)
+		ss.delete(id)
+		net.Session.AddFlash("LFG Listing Deleted: ")
+		net.Session.AddFlash(net.Session.Values["lfg_id"].(int))
+	} else {
+		net.Session.AddFlash("Could Not Delete LFG Listing: ")
+		net.Session.AddFlash(net.Session.Values["lfg_id"].(int))
+	}
+	
+	net.Session.Values["lfg_id"] = 0
+	net.Session.Save(r,w)
 
-	net.DecodeForm(&da, r)
-
-	ss := new(lfgsAdapter)
-	ss.delete(da.Id)
+	http.Redirect(w, r, "/", http.StatusFound)
 }
 
 func GetLfgsList() *lfgsAdapter {

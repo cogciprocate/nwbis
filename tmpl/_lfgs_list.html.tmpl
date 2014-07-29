@@ -1,9 +1,14 @@
 {{ define "lfgsList" }}
 {{ $rps := (index .Sdata 1).RankingPages }}
 {{ $rpsa := (index .Sdata 1) }}
+{{ $gid := (index .Sdata 2) }}
 {{ $d := . }}
 <h2 class="content-subhead">Players Looking for Group</h2>
+{{ if $gid }}<a href="/lfgs/form/0" class="button-table pure-button">Edit My Listing</a><a href="/lfgs/delete/0" class="button-normal pure-button">Remove My Listing</a>
+{{ else }}
 <a href="/lfgs/form/0" class="button-table pure-button">Find a Group</a>
+{{ end }}
+
 <table class="listing-table pure-table pure-table-horizontal">
     <thead>
         <tr>

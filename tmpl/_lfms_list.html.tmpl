@@ -1,8 +1,13 @@
 {{ define "lfmsList" }}
 {{ $lfms := (index .Sdata 0).Lfms }}
+{{ $mid := (index .Sdata 3) }}
 {{ $d := . }}
 <h2 class="content-subhead">Groups Looking for a 5v5 Match</h2>
+{{ if $mid }}
+<a href="/lfms/form/0" class="button-table pure-button">Edit My Listing</a><a href="/lfms/delete/0" class="button-normal pure-button">Remove My Listing</a>
+{{ else }}
 <a href="/lfms/form/0" class="button-table pure-button">Find a 5v5 Match</a>
+{{end}}
 <table class="listing-table pure-table pure-table-horizontal">
     <thead>
         <tr>
@@ -18,7 +23,7 @@
         <tr>
             <td hidden>{{ .Id }}</td>
             <td class="long-column">{{ .CharacterName }}@{{ .UserName }}</td>
-            <td>{{ .Rainbow }}</td>
+            <td>{{ if .Rainbow }}Yes{{ else }}No{{ end }}</td>
             <td>{{ ($d.Net.TimeSince .AddedAt) }}m ago</td>
         </tr>
         {{ end }}

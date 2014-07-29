@@ -12,7 +12,7 @@ type lfm struct {
 	CharacterId   int
 	UserName       string
 	UserId    int
-	Rainbow	bool
+	Rainbow	string
 	AddedAt time.Time
 	TimeSince string
 }
@@ -36,14 +36,15 @@ func (da *lfmsAdapter) delete(id int) {
 	da.Exec(db.Stmts["deleteLfm"], id)
 }
 
-func (da *lfmsAdapter) save(lfm *lfm) {
+func (da *lfmsAdapter) save(lfm *lfm) (lastId int) {
 	
 	if lfm.Id == 0 {
-		da.Exec(db.Stmts["createLfm"], lfm.CharacterName, lfm.UserName, lfm.Rainbow)
+		lastId = da.Insert(db.Stmts["createLfm"], lfm.CharacterName, lfm.UserName, lfm.Rainbow)
 	} else {
 		da.Exec(db.Stmts["updateLfm"], lfm.Id, lfm.CharacterName, lfm.UserName, lfm.Rainbow)
+		lastId = lfm.Id
 	}
-	
+	return
 }
 
 func (da *lfmsAdapter) newLfm() (inf interface{}) {
@@ -51,7 +52,6 @@ func (da *lfmsAdapter) newLfm() (inf interface{}) {
 	lfm := new(lfm)
 	da.Lfms = append(da.Lfms, lfm)
 	inf = lfm
-	
-	
+		
 	return
 }

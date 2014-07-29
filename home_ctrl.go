@@ -2,7 +2,8 @@ package main
 
 import (
 	"net/http"
-	//"github.com/nsan1129/unframed/log"
+	//"github.com/nsan1129/unframed"
+	"github.com/nsan1129/unframed/log"
 )
 
 func homeReg() {
@@ -11,7 +12,6 @@ func homeReg() {
 
 	otherStmts()
 
-	net.RegType(&Session{})
 }
 
 func homeTemplates() {
@@ -27,12 +27,30 @@ func homeRoutes() {
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
+
 	lfgsA := new(lfgsAdapter).list()
 	lfmsA := new(lfmsAdapter).list()
 	ra := new(rankingPagesAdapter).list()
 
+	net.SetSession(r)
+	if flashes := net.Session.Flashes(); len(flashes) > 0 {
+        // Just print the flash values.
+        log.Message(flashes)
+    } 
+
+    lfm_id := 0
+	if val,ok := net.Session.Values["lfm_id"]; ok {
+		lfm_id = val.(int)
+	}
+
+	lfg_id := 0
+	if val,ok := net.Session.Values["lfg_id"]; ok {
+		lfg_id = val.(int)
+	}
+
+    net.Session.Save(r,w)
 	//log.Message(len(dataModel.Lfgs))
-	net.ExeTmpl(w, "home", lfgsA, lfmsA, ra)
+	net.ExeTmpl(w, "home", lfgsA, lfmsA, ra, lfg_id, lfm_id)
 }
 
 func help(w http.ResponseWriter, r *http.Request) {

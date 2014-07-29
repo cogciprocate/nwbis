@@ -14,7 +14,8 @@ func lfmsStmts() {
 			user_name, 
 			rainbow, 
 			added_at
-		) VALUES ($1, $2, $3, NOW());`,
+		) VALUES ($1, $2, $3, NOW()) 
+		RETURNING id;`,
 	)
 
 	db.AddStatement("listLfms",
@@ -59,7 +60,8 @@ func lfmsStmts() {
 		`UPDATE lfms SET 
 			character_name = $2, 
 			user_name = $3, 
-			rainbow = $4
+			rainbow = $4,
+			added_at = NOW()
 		WHERE id = $1;`,
 	)
 

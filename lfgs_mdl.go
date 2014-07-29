@@ -42,14 +42,15 @@ func (da *lfgsAdapter) delete(id int) {
 	da.Exec(db.Stmts["deleteLfg"], id)
 }
 
-func (da *lfgsAdapter) save(lfg *lfg) {
+func (da *lfgsAdapter) save(lfg *lfg) (lastId int) {
 	
 	if lfg.Id == 0 {
-		da.Exec(db.Stmts["createLfg"], lfg.CharacterName, lfg.UserName, lfg.ClassId, lfg.RankingPage, lfg.QueuePrefId)
+		lastId = da.Insert(db.Stmts["createLfg"], lfg.CharacterName, lfg.UserName, lfg.ClassId, lfg.RankingPage, lfg.QueuePrefId)
 	} else {
 		da.Exec(db.Stmts["updateLfg"], lfg.Id, lfg.CharacterName, lfg.UserName, lfg.ClassId, lfg.RankingPage, lfg.QueuePrefId)
+		lastId = lfg.Id
 	}
-	
+	return
 }
 
 func (da *lfgsAdapter) newLfg() (inf interface{}) {

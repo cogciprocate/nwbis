@@ -17,7 +17,8 @@ func lfgsStmts() {
 			ranking_page, 
 			queue_pref_id,
 			added_at
-		) VALUES ($1, $2, $3, $4, $5, NOW());`,
+		) VALUES ($1, $2, $3, $4, $5, NOW()) 
+		RETURNING id;`,
 	)
 
 	db.AddStatement("listLfgs",
@@ -80,14 +81,14 @@ func lfgsStmts() {
 			user_name = $3, 
 			class_id = $4, 
 			ranking_page = $5, 
-			queue_pref_id = $6
+			queue_pref_id = $6,
+			added_at = NOW()
 		WHERE id = $1;`,
 	)
-	/*
+	
 	db.AddStatement("deleteLfg",
 		d,
 		`DELETE FROM lfgs
 		WHERE id = $1;`,
 	)
-	*/
 }

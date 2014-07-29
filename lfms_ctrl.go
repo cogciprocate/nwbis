@@ -2,7 +2,8 @@ package main
 
 import (
 	"net/http"
-	//"github.com/nsan1129/unframed/log"
+	"github.com/nsan1129/unframed/log"
+	//"github.com/nsan1129/unframed"
 )
 
 func lfmsReg() {
@@ -27,27 +28,43 @@ func lfmsRoutes() {
 	sr.Get("/list", home)
 	sr.Get("/form/{Id}", lfmsForm)
 	sr.Post("/save", lfmsSave)
-	sr.Post("/delete", lfmsDelete)
+	sr.Get("/delete/{Id}", lfmsDelete)
 }
 
+/*
 func lfmsPage(w http.ResponseWriter, r *http.Request) {
 	da := new(lfmsAdapter).list()
+	net.SetSession(r)
 	//log.Message(len(dataModel.Lfgs))
 	net.ExeTmpl(w, "lfmsPage", da)
 }
 
 func lfmsList(w http.ResponseWriter, r *http.Request) {
 	da := new(lfmsAdapter).list()
+	net.SetSession(r)
 	//log.Message(len(dataModel.Lfms))
+	if flashes := net.Session.Flashes(); len(flashes) > 0 {
+        // Just print the flash values.
+        log.Message(flashes)
+    } else {
+    	net.Session.AddFlash("Hello, flash messages world!")
+        log.Message("No flashes found.")
+    }
+    net.Session.Save(r,w)
 	net.ExeTmpl(w, "lfmsList", da)
 }
-
+*/
 
 func lfmsForm(w http.ResponseWriter, r *http.Request) {
 
-	id := net.QueryUrl("Id", r)
-
 	da := new(lfmsAdapter)
+
+	id := 0
+	net.SetSession(r)
+	if val,ok := net.Session.Values["lfm_id"]; ok {
+		id = val.(int)
+		log.Message("Loading LFM, Id:", id) 
+	}
 
 	if id == 0 {
 		_ = da.newLfm()
@@ -59,11 +76,17 @@ func lfmsForm(w http.ResponseWriter, r *http.Request) {
 
 func lfmsSave(w http.ResponseWriter, r *http.Request) {
 
-	da := new(lfm)
+	dm := new(lfm)
 
-	net.DecodeForm(da, r)
+	net.DecodeForm(dm, r)
 
-	new(lfmsAdapter).save(da)
+	lastId := new(lfmsAdapter).save(dm)
+
+	net.SetSession(r)
+	net.Session.Values["lfm_id"] = lastId
+	net.Session.AddFlash("new LFM Saved: ")
+	net.Session.AddFlash(net.Session.Values["lfm_id"].(int))
+	net.Session.Save(r,w)
 
 	http.Redirect(w, r, "/lfms/list", http.StatusFound)
 
@@ -71,12 +94,22 @@ func lfmsSave(w http.ResponseWriter, r *http.Request) {
 
 func lfmsDelete(w http.ResponseWriter, r *http.Request) {
 
-	var da struct{ Id int }
+	net.SetSession(r)
+	if val,ok := net.Session.Values["lfm_id"]; ok {
+	    id := val.(int)
+	    ss := new(lfmsAdapter)
+		ss.delete(id)
+		net.Session.AddFlash("LFM Listing Deleted: ")
+		net.Session.AddFlash(net.Session.Values["lfm_id"].(int))
+	} else {
+		net.Session.AddFlash("Could Not Delete LFM Listing: ")
+		net.Session.AddFlash(net.Session.Values["lfm_id"].(int))
+	}
+	
+	net.Session.Values["lfm_id"] = 0
+	net.Session.Save(r,w)
 
-	net.DecodeForm(&da, r)
-
-	ss := new(lfmsAdapter)
-	ss.delete(da.Id)
+	http.Redirect(w, r, "/", http.StatusFound)
 }
 
 func GetLfmsList() *lfmsAdapter {
