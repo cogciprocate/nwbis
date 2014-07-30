@@ -42,8 +42,9 @@ func lfgsStmts() {
 		FROM lfgs l, classes c, queue_prefs q
 		WHERE c.id = l.class_id 
 			AND q.id = l.queue_pref_id 
-			AND (NOW() - l.added_at) < (interval '240 minutes')
-		ORDER BY l.id DESC
+			AND (NOW() - l.added_at) < (interval '60 minutes')
+			AND l.ousts < 3
+		ORDER BY l.added_at DESC
 		LIMIT $1;
 		`,
 	)
@@ -84,7 +85,8 @@ func lfgsStmts() {
 			class_id = $4, 
 			ranking_page = $5, 
 			queue_pref_id = $6,
-			added_at = NOW()
+			added_at = NOW(),
+			ousts = 0
 		WHERE id = $1;`,
 	)
 	
