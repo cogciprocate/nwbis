@@ -126,6 +126,6 @@ func lfgsOust(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusFound)
 }
 
-func GetLfgsList() *lfgsAdapter {
+func lfgsList() *lfgsAdapter {
 	return new(lfgsAdapter).list()
 }

@@ -1,7 +1,16 @@
-body {
+html, body {
     color: #ddd;
     background: #101010;
     font-family:"Courier New", Courier, monospace;
+    
+    /*
+    position: relative;
+    */
+    /* min-height: 100%;*/
+}
+
+.bodyContainer {
+    min-height: 100%;
 }
 
 .pure-g [class *="pure-u"] {
@@ -13,19 +22,46 @@ body {
     height: auto;
 }
 
+a:link {
+    color: #cd6e77;
+}
+
+a:visited {
+    color: #763f44;
+}
+
+a:active, a:hover {
+    color: #ef1428;
+}
+
+
 /*
 Add transition to containers so they can push in and out.
 */
 
 #main {
     overflow:auto;
-    padding-bottom: 150px;
+    padding-bottom: 50px;
 }  /* must be same height as the footer */
 
-#footer {position: relative;
-    margin-top: -150px; /* negative value of footer height */
-    height: 150px;
-    clear:both;} 
+.pushdown {
+    position: relative;
+    clear:both;
+}
+
+.footer {
+    position: absolute;
+    margin-top: -50px; /* negative value of footer height */
+    margin-left: 160px;
+    margin-right:4em;
+    height: 50px;
+    width: 100%;
+    bottom : 0;
+    left: 0;
+    clear: both;
+
+    text-align: left;
+} 
 
 #layout,
 #menu,
@@ -93,6 +129,9 @@ The content `<div>` is where all your content goes.
     color: #aaa;
 }
 
+.headingRed {
+    color: #ef1428;
+}
 
 
 /*
@@ -316,7 +355,8 @@ a.copyr {
     color: #444;
     display: block;
     padding-top: 5px;
-    padding-left: 12px;
+    padding-left: 20px;
+    
     font-size: .6em;
 }
 
@@ -332,12 +372,6 @@ a.copyr {
         color: #777; 
     }
 
-.footer {
-    text-align: right;
-    margin-left:4em;
-    margin-right:4em;
-    position:absolute;
-}
 
 /* -- Responsive Styles (Media Queries) ------------------------------------- */
 

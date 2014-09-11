@@ -43,5 +43,6 @@ func registerControllers() {
 	lfgsReg()
 	lfmsReg()
 	homeReg()
+	codingChallengeReg()
 }
 

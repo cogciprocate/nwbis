@@ -35,7 +35,6 @@ func (da *lfgsAdapter) list() *lfgsAdapter {
 
 func (da *lfgsAdapter) show(id int) *lfgsAdapter {
 	da.Query(da.newLfg, db.Stmts["showLfg"], id)
-	//log.Message(da.Lfgs[0].AddedAt)
 	return da
 }
 
