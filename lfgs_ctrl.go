@@ -2,8 +2,8 @@ package main
 
 import (
 	"net/http"
-	//"github.com/nsan1129/unframed"
-	//"github.com/nsan1129/unframed/log"
+	//"github.com/c0gent/unframed"
+	//"github.com/c0gent/unframed/log"
 )
 
 func lfgsReg() {
@@ -16,9 +16,7 @@ func lfgsReg() {
 
 func lfgsTemplates() {
 	net.TemplateFiles(
-		"tmpl/_lfgs_list.html.tmpl",
-		"tmpl/_lfgs_form.html.tmpl",
-		"tmpl/lfgs_page.html.tmpl",
+		"tmpl/lfgs.html.tmpl",
 	)
 	//log.Message("lfgsTemplates run")
 }
@@ -57,8 +55,8 @@ func lfgsForm(w http.ResponseWriter, r *http.Request) {
 
 	id := 0
 	net.SetSession(r)
-	if val,ok := net.Session.Values["lfg_id"]; ok {
-	    id = val.(int)
+	if val, ok := net.Session.Values["lfg_id"]; ok {
+		id = val.(int)
 		//log.Message("Loading LFg, Id:", id)
 	}
 
@@ -82,7 +80,7 @@ func lfgsSave(w http.ResponseWriter, r *http.Request) {
 	net.Session.Values["lfg_id"] = lastId
 	net.Session.AddFlash("new LFG Saved: ")
 	net.Session.AddFlash(net.Session.Values["lfg_id"].(int))
-	net.Session.Save(r,w)
+	net.Session.Save(r, w)
 
 	http.Redirect(w, r, "/lfgs/list", http.StatusFound)
 
@@ -92,9 +90,9 @@ func lfgsDelete(w http.ResponseWriter, r *http.Request) {
 
 	/* id := net.QueryUrl("Id", r) */
 	net.SetSession(r)
-	if val,ok := net.Session.Values["lfg_id"]; ok {
-	    id := val.(int)
-	    da := new(lfgsAdapter)
+	if val, ok := net.Session.Values["lfg_id"]; ok {
+		id := val.(int)
+		da := new(lfgsAdapter)
 		da.delete(id)
 		net.Session.AddFlash("LFG Listing Deleted: ")
 		net.Session.AddFlash(net.Session.Values["lfg_id"].(int))
@@ -102,9 +100,9 @@ func lfgsDelete(w http.ResponseWriter, r *http.Request) {
 		net.Session.AddFlash("Could Not Delete LFG Listing: ")
 		net.Session.AddFlash(net.Session.Values["lfg_id"].(int))
 	}
-	
+
 	net.Session.Values["lfg_id"] = 0
-	net.Session.Save(r,w)
+	net.Session.Save(r, w)
 
 	http.Redirect(w, r, "/", http.StatusFound)
 }
@@ -113,13 +111,13 @@ func lfgsOust(w http.ResponseWriter, r *http.Request) {
 	net.SetSession(r)
 	id := net.QueryUrl("Id", r)
 
-	if val,ok := net.Session.Values["ousts"]; ok {
+	if val, ok := net.Session.Values["ousts"]; ok {
 		net.Session.Values["ousts"] = net.StrAppendInt(val.(string), id, ",")
 	} else {
 		net.Session.Values["ousts"] = net.StrAppendInt("", id, "")
 	}
 
-	net.Session.Save(r,w)
+	net.Session.Save(r, w)
 	da := new(lfgsAdapter)
 	da.oust(id)
 

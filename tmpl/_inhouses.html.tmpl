@@ -1,0 +1,94 @@
+
+{{ define "inhousesList" }}
+    {{ template "pageHeader" . }}
+    <div class="content">
+        <div class="tables-container tables-container-listing">
+            <h2 class="content-subhead"><b>Pre-Arranged 5v5 Inhouse Matches</b></h2>
+            <table class="listing-table pure-table pure-table-horizontal">
+                <thead>
+                    <tr>
+                        <th hidden>Id</th>
+                        <th>Organizer</th>
+                        <th>Sign-ups</th>
+                        <th>Time/Date</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td hidden>Id</td>
+                        <td class="long-column">CharacterName@UserName</td>
+                        <td>25</td>
+                        <td>19:00 PST / Feburary 15</td>
+                        <td>I AM A BUTTON</td>
+                    </tr>
+
+                    <tr>
+                        <td class="spacer-column" colspan=100%></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {{ template "pageFooterTop" . }}
+    {{ template "pageFooterBottom" . }}
+{{ end }}
+
+
+{{ define "inhousesForm" }}
+    {{ template "pageHeader" . }}
+    {{ $inhousesa := (index .Data 0) }}
+    {{ $inhouse := (index $inhousesa.Inhouses 0) }}
+    <div class="content">
+        <h2 class="content-subhead">Find a 5v5 Match</h2>
+        <form class="pure-form pure-form-aligned" action="/inhouses/save" method="post">
+            <fieldset>
+                <input name="Id" type="number" value="{{ or $inhouse.Id 0 }}" hidden>
+                <div class="pure-control-group">
+                    <label for="CharacterName">Party Leader Char/Acct:</label>
+                    <input name="CharacterName" type="text" value="{{ or $inhouse.CharacterName "" }}" placeholder="Character Name" maxlength="20" size="20" required />&nbsp@&nbsp<input name="UserName" type="text" value="{{ or $inhouse.UserName "" }}" maxlength="25" size="25" required />
+                </div>
+                <div class="pure-control-group">
+                    <label for="Rainbow">Rainbow:</label>
+                    <input name="Rainbow" type="checkbox" value="Checked" {{ or $inhouse.Rainbow "" }} />
+                </div>
+                <p>&nbsp</p>
+                <input type="checkbox" value=false required />
+                <label>I have typed /unhide and am not hidden or anonymous</label>
+                <!--
+                <div class="pure-control-group">
+                    <label for="AddedAt">Added At:</label>
+                    <input type="datetime" value="{{ or $inhouse.AddedAt 0 }}" disabled />
+                </div>
+                <div class="pure-control-group">
+                    <label for="password">Password</label>
+                    <input id="password" type="password" placeholder="Password">
+                </div>
+
+                <div class="pure-control-group">
+                    <label for="email">Email Address</label>
+                    <input id="email" type="email" placeholder="Email Address">
+                </div>
+
+                <div class="pure-control-group">
+                    <label for="foo">Supercalifragilistic Label</label>
+                    <input id="foo" type="text" placeholder="Enter something here...">
+                </div>
+
+                <div class="pure-controls">
+                    <label for="cb" class="pure-checkbox">
+                        <input id="cb" type="checkbox"> I've read the terms and conditions
+                    </label>
+
+                    <button type="submit" class="pure-button pure-button-primary">Submit</button>
+                </div>-->
+            </fieldset>
+        <input type="submit" class="button-table pure-button" value="List Me" />
+        <a href="/inhouses/list" class="button-normal pure-button">Cancel</a>
+        </form>
+    </div>
+    {{ template "pageFooterTop" . }}
+    {{ template "pageFooterBottom" . }}
+{{ end }}

@@ -1,0 +1,109 @@
+{{ define "lfmsPage" }}
+{{ template "pageHeader" . }}
+
+<div class="content">
+    <div class="tables-container tables-container-listing">
+        {{ template "lfmsList" . }}
+    </div>
+</div>
+{{ template "pageFooterTop" . }}
+{{ template "pageFooterBottom" . }}
+{{ end }}
+
+
+
+
+{{ define "lfmsForm" }}
+{{ template "pageHeader" . }}
+{{ $lfmsa := (index .Data 0) }}
+{{ $lfm := (index $lfmsa.Lfms 0) }}
+<div class="content">
+    <h2 class="content-subhead">Find a 5v5 Match</h2>
+    <form class="pure-form pure-form-aligned" action="/lfms/save" method="post">
+        <fieldset>
+            <input name="Id" type="number" value="{{ or $lfm.Id 0 }}" hidden>
+            <div class="pure-control-group">
+                <label for="CharacterName">Party Leader Char/Acct:</label>
+                <input name="CharacterName" type="text" value="{{ or $lfm.CharacterName "" }}" placeholder="Character Name" maxlength="20" size="20" required />&nbsp@&nbsp<input name="UserName" type="text" value="{{ or $lfm.UserName "" }}" maxlength="25" size="25" required />
+            </div>
+            <div class="pure-control-group">
+                <label for="Rainbow">Rainbow:</label>
+                <input name="Rainbow" type="checkbox" value="Checked" {{ or $lfm.Rainbow "" }} />
+            </div>
+            <p>&nbsp</p>
+            <input type="checkbox" value=false required />
+            <label>I have typed /unhide and am not hidden or anonymous</label>
+            <!--
+            <div class="pure-control-group">
+                <label for="AddedAt">Added At:</label>
+                <input type="datetime" value="{{ or $lfm.AddedAt 0 }}" disabled />
+            </div>
+            <div class="pure-control-group">
+                <label for="password">Password</label>
+                <input id="password" type="password" placeholder="Password">
+            </div>
+
+            <div class="pure-control-group">
+                <label for="email">Email Address</label>
+                <input id="email" type="email" placeholder="Email Address">
+            </div>
+
+            <div class="pure-control-group">
+                <label for="foo">Supercalifragilistic Label</label>
+                <input id="foo" type="text" placeholder="Enter something here...">
+            </div>
+
+            <div class="pure-controls">
+                <label for="cb" class="pure-checkbox">
+                    <input id="cb" type="checkbox"> I've read the terms and conditions
+                </label>
+
+                <button type="submit" class="pure-button pure-button-primary">Submit</button>
+            </div>-->
+        </fieldset>
+    <input type="submit" class="button-table pure-button" value="List Me" />
+    <a href="/lfms/list" class="button-normal pure-button">Cancel</a>
+    </form>
+</div>
+{{ template "pageFooterTop" . }}
+{{ template "pageFooterBottom" . }}
+{{ end }}
+
+
+
+
+{{ define "lfmsList" }}
+{{ $lfms := (index .Data 1).Lfms }}
+{{ $mid := (index .Data 4) }}
+{{ $d := . }}
+<h2 class="content-subhead"><b>Groups Looking for a 5v5 Match</b></h2>
+{{ if $mid }}
+<a href="/lfms/form/0" class="button-table pure-button">Edit My Listing</a><a href="/lfms/delete/0" class="button-normal pure-button">Remove My Listing</a>
+{{ else }}
+<a href="/lfms/form/0" class="button-table pure-button">Find a 5v5 Match</a>
+{{end}}
+<table class="listing-table pure-table pure-table-horizontal">
+    <thead>
+        <tr>
+            <th hidden>Id</th>
+            <th>Party Leader</th>
+            <th>Rainbow</th>
+            <th>Added</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {{ range $lfms }}
+        <tr>
+            <td hidden>{{ .Id }}</td>
+            <td class="long-column">{{ .CharacterName }}@{{ .UserName }}</td>
+            <td>{{ if .Rainbow }}Yes{{ else }}No{{ end }}</td>
+            <td>{{ ($d.Net.TimeSince .AddedAt) }}m ago</td>
+        </tr>
+        {{ end }}
+        <tr>
+            <td class="spacer-column" colspan=100%></td>
+        </tr>
+    </tbody>
+</table>
+{{ end }}

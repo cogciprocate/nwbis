@@ -1,9 +1,9 @@
 package main
 
 import (
+	"github.com/c0gent/unframed/log"
 	"net/http"
-	"github.com/nsan1129/unframed/log"
-	//"github.com/nsan1129/unframed"
+	//"github.com/c0gent/unframed"
 )
 
 func lfmsReg() {
@@ -16,9 +16,7 @@ func lfmsReg() {
 
 func lfmsTemplates() {
 	net.TemplateFiles(
-		"tmpl/_lfms_list.html.tmpl",
-		"tmpl/_lfms_form.html.tmpl",
-		"tmpl/lfms_page.html.tmpl",
+		"tmpl/lfms.html.tmpl",
 	)
 	//log.Message("lfmsTemplates run")
 }
@@ -61,9 +59,9 @@ func lfmsForm(w http.ResponseWriter, r *http.Request) {
 
 	id := 0
 	net.SetSession(r)
-	if val,ok := net.Session.Values["lfm_id"]; ok {
+	if val, ok := net.Session.Values["lfm_id"]; ok {
 		id = val.(int)
-		log.Message("Loading LFM, Id:", id) 
+		log.Message("Loading LFM, Id:", id)
 	}
 
 	if id == 0 {
@@ -86,7 +84,7 @@ func lfmsSave(w http.ResponseWriter, r *http.Request) {
 	net.Session.Values["lfm_id"] = lastId
 	net.Session.AddFlash("new LFM Saved: ")
 	net.Session.AddFlash(net.Session.Values["lfm_id"].(int))
-	net.Session.Save(r,w)
+	net.Session.Save(r, w)
 
 	http.Redirect(w, r, "/lfms/list", http.StatusFound)
 
@@ -95,9 +93,9 @@ func lfmsSave(w http.ResponseWriter, r *http.Request) {
 func lfmsDelete(w http.ResponseWriter, r *http.Request) {
 
 	net.SetSession(r)
-	if val,ok := net.Session.Values["lfm_id"]; ok {
-	    id := val.(int)
-	    ss := new(lfmsAdapter)
+	if val, ok := net.Session.Values["lfm_id"]; ok {
+		id := val.(int)
+		ss := new(lfmsAdapter)
 		ss.delete(id)
 		net.Session.AddFlash("LFM Listing Deleted: ")
 		net.Session.AddFlash(net.Session.Values["lfm_id"].(int))
@@ -105,9 +103,9 @@ func lfmsDelete(w http.ResponseWriter, r *http.Request) {
 		net.Session.AddFlash("Could Not Delete LFM Listing: ")
 		net.Session.AddFlash(net.Session.Values["lfm_id"].(int))
 	}
-	
+
 	net.Session.Values["lfm_id"] = 0
-	net.Session.Save(r,w)
+	net.Session.Save(r, w)
 
 	http.Redirect(w, r, "/", http.StatusFound)
 }

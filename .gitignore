@@ -4,7 +4,6 @@
 *.so
 *.jpg
 *.JPG
-*.asshole
 
 # Folders
 _obj

@@ -1,0 +1,160 @@
+{{ define "lfgsPage" }}
+{{ template "pageHeader" . }}
+
+<div class="content">
+    <div class="tables-container tables-container-listing">
+        {{ template "lfgsList" . }}
+    </div>
+</div>
+{{ template "pageFooterTop" . }}
+{{ template "pageFooterBottom" . }}
+{{ end }}
+
+
+
+
+
+{{ define "lfgsForm" }}
+{{ template "pageHeader" . }}
+{{ $lfgs := (index .Data 0).Lfgs }}
+{{ $lfg := (index $lfgs 0) }}
+{{ $cls := (index .Data 1).Classes }}
+{{ $qps := (index .Data 2).QueuePrefs }}
+{{ $rps := (index .Data 3).RankingPages }}
+{{ $net := .Net }}
+
+<div class="content">
+    <h2 class="content-subhead">Find a Group</h2>
+    <form class="pure-form pure-form-aligned" action="/lfgs/save" method="post">
+        <fieldset>
+            <input name="Id" type="number" value="{{ or $lfg.Id 0 }}" hidden>
+            <div class="pure-control-group">
+                <label for="CharacterName">Character@Account:</label>
+                <input name="CharacterName" type="text" value="{{ or $lfg.CharacterName "" }}" placeholder="Character Name" maxlength="20" size="20" required autofocus />&nbsp<span><b>@</b></span><input name="UserName" type="text" value="{{ or $lfg.UserName "" }}" maxlength="25" size="25" required />
+            </div>
+            <div class="pure-control-group">
+                <label for="ClassId">Class:</label>
+                <select name="ClassId" size="7" value="{{ or $lfg.ClassId "" }}" required />
+                    {{ range $cls }}
+                        <option value="{{ .Id }}" {{if ($net.Compare $lfg.ClassId .Id)}}selected{{end}}>{{ .Name }}</option>
+                    {{ end }}
+                </select>
+            </div>
+            <!--
+            <div class="pure-control-group">
+                <label for="ClassId">Class Id:</label>
+                <input name="ClassId" type="number" value="{{ or $lfg.ClassId 0 }}">
+            </div>
+            -->
+            <div class="pure-control-group">
+                <label for="RankingPage">Ranking Page:</label>
+                <select name="RankingPage" size="3" value="{{ or $lfg.RankingPage "" }}" required />
+                    {{ range $rps }}
+                        <option value="{{ .Id }}" {{if ($net.Compare $lfg.RankingPage .Id)}}selected{{end}}>{{ .Name }}</option>
+                    {{ end }}
+                </select>
+            </div>
+            
+            <div class="pure-control-group">
+                <label for="QueuePrefId">Group Type:</label>
+                <select name="QueuePrefId" size="4" value="{{ or $lfg.QueuePrefId "" }}" required />
+                    {{ range $qps }}
+                        <option value="{{ .Id }}" {{if ($net.Compare $lfg.QueuePrefId .Id)}}selected{{end}}>{{ .Name }}</option>
+                    {{ end }}
+                </select>
+            </div>
+            <p>&nbsp</p>
+            <input type="checkbox" value=false required />
+            <label>I have typed /unhide and am not hidden or anonymous</label>
+            <!--
+            <div class="pure-control-group">
+                <label for="QueuePrefId">Queue Preference Id:</label>
+                <input name="QueuePrefId" type="number" value="{{ or $lfg.QueuePrefId 0 }}" required />
+            </div>
+
+            <div class="pure-control-group">
+                <label for="AddedAt">Added At:</label>
+                <input type="datetime" value="{{ or $lfg.AddedAt 0 }}" disabled />
+            </div>
+
+            <div class="pure-control-group">
+                <label for="password">Password</label>
+                <input id="password" type="password" placeholder="Password">
+            </div>
+
+            <div class="pure-control-group">
+                <label for="email">Email Address</label>
+                <input id="email" type="email" placeholder="Email Address">
+            </div>
+
+            <div class="pure-control-group">
+                <label for="foo">Supercalifragilistic Label</label>
+                <input id="foo" type="text" placeholder="Enter something here...">
+            </div>
+
+            <div class="pure-controls">
+                <label for="cb" class="pure-checkbox">
+                    <input id="cb" type="checkbox"> I've read the terms and conditions
+                </label>
+
+                <button type="submit" class="pure-button pure-button-primary">Submit</button>
+            </div>-->
+        </fieldset>
+    <input type="submit" class="button-table pure-button" value="List Me" />
+    <a href="/lfgs/list" class="button-normal pure-button">Cancel</a>
+    </form>
+</div>
+{{ template "pageFooterTop" . }}
+{{ template "pageFooterBottom" . }}
+{{ end }}
+
+
+
+
+
+{{ define "lfgsList" }}
+{{ $lfga := (index .Data 0) }}
+{{ $rps := (index .Data 2).RankingPages }}
+{{ $rpsa := (index .Data 2) }}
+{{ $gid := (index .Data 3) }}
+{{ $oustlist := (index .Data 5) }}
+{{ $d := . }}
+<h2 class="content-subhead"><b>Players Looking for Group</b></h2>
+{{ if $gid }}<a href="/lfgs/form/0" class="button-table pure-button">Edit My Listing</a><a href="/lfgs/delete/0" class="button-normal pure-button">Remove My Listing</a>
+{{ else }}
+<a href="/lfgs/form/0" class="button-table pure-button">Find a Group</a>
+{{ end }}
+
+<table class="listing-table pure-table pure-table-horizontal">
+    <thead>
+        <tr>
+            <th hidden>Id</th>
+            <th>Name</th>
+            <th>Class</th>
+            <th>Page</th>
+            <th>Group Type</th>
+            <th>Added</th>
+            <th>Remove</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {{ range $lfga.Lfgs }}
+        {{$ousted := ($lfga.IsOusted .Id $oustlist .Ousts)}}
+        <tr {{if $ousted }}class="strikethrough"{{end}}>
+            <td hidden>{{ .Id }}</td>
+            <td class="long-column">{{ .CharacterName }}@{{ .UserName }}</td>
+            <td>{{ .ClassAbbr }}</td>
+            <td>{{ ($rpsa.AsText .RankingPage) }}</td>
+            <td>{{ .QueuePrefName }}</td>
+            <td>{{ ($d.Net.TimeSince .AddedAt) }}m ago</td>
+            <td>{{if not $ousted}}<a href="/lfgs/oust/{{ .Id }}" class="pure-button button-small"> X </a>{{end}}</td>
+        </tr>
+        {{ end }}
+        <tr>
+            <td class="spacer-column" colspan=100%></td>
+        </tr>
+    </tbody>
+</table>
+{{ end }}
+

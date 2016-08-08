@@ -2,8 +2,8 @@ package main
 
 import (
 	_ "github.com/lib/pq"
-	"github.com/nsan1129/unframed"
-	"github.com/nsan1129/unframed/log"
+	"github.com/c0gent/unframed"
+	"github.com/c0gent/unframed/log"
 )
 
 var net *unframed.NetHandle
@@ -36,13 +36,12 @@ func main() {
 
 	log.Message("Serving nwBiS")
 	net.Serve(cfg.ListenPort)
-
 }
 
 func registerControllers() {
+	inhousesReg()
 	lfgsReg()
 	lfmsReg()
 	homeReg()
-	codingChallengeReg()
+	//codingChallengeReg()
 }
-
